@@ -1,0 +1,36 @@
+const menuButton = document.querySelector(".menu-toggle");
+const navigation = document.querySelector(".desktop-nav");
+
+menuButton?.addEventListener("click", () => {
+  const isOpen = navigation.classList.toggle("open");
+  menuButton.setAttribute("aria-expanded", String(isOpen));
+});
+
+navigation?.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => {
+    navigation.classList.remove("open");
+    menuButton?.setAttribute("aria-expanded", "false");
+  });
+});
+
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.12 },
+);
+
+document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+
+const cursorGlow = document.querySelector(".cursor-glow");
+window.addEventListener("pointermove", (event) => {
+  cursorGlow?.animate(
+    { left: `${event.clientX}px`, top: `${event.clientY}px` },
+    { duration: 700, fill: "forwards" },
+  );
+});
